@@ -1,0 +1,38 @@
+project:
+  type: website
+  output-dir: public
+
+format:
+  html:
+    theme: cosmo
+
+website:
+  title: "Il mio Portale Didattico"
+  
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: glossario/cinematica.qmd
+        text: Glossario Fisica
+      - text: Lezioni 
+        menu: 
+          - href: presentazioni/Equazioni.qmd
+            text: Equazioni di I grado
+            target: _blank # Apre la presentazione in una nuova scheda
+          - href: presentazioni/SezioneAurea.qmd
+            text: Sezione aurea
+            target: _blank # Apre la presentazione in una nuova scheda
+
+    # Barra laterale (appare solo nelle cartelle specificate)
+    sidebar:
+      - id: glossario-sidebar
+        title: "Argomenti Fisica"
+        style: "docked"
+        search: true # Aggiunge una barra di ricerca interna alla sidebar!
+        contents:
+          - section: "Cinematica"
+            contents:
+              - href: glossario/cinematica.qmd
+                text: "Cinematica"
+            
