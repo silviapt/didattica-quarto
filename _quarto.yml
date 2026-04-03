@@ -5,6 +5,7 @@ project:
 format:
   html:
     theme: cosmo
+    link-external-newwindow: true # Apre automaticamente i link esterni/slide in nuove schede
 
 website:
   title: "Il mio Portale Didattico"
@@ -19,20 +20,17 @@ website:
         menu: 
           - href: presentazioni/Equazioni.qmd
             text: Equazioni di I grado
-            target: _blank # Apre la presentazione in una nuova scheda
           - href: presentazioni/SezioneAurea.qmd
             text: Sezione aurea
-            target: _blank # Apre la presentazione in una nuova scheda
 
-    # Barra laterale (appare solo nelle cartelle specificate)
-    sidebar:
-      - id: glossario-sidebar
-        title: "Argomenti Fisica"
-        style: "docked"
-        search: true # Aggiunge una barra di ricerca interna alla sidebar!
+  # LA SIDEBAR DEVE ESSERE ALLINEATA A NAVBAR
+  sidebar:
+    id: glossario-sidebar
+    title: "Argomenti Fisica"
+    style: "docked"
+    search: true
+    contents:
+      - section: "Cinematica"
         contents:
-          - section: "Cinematica"
-            contents:
-              - href: glossario/cinematica.qmd
-                text: "Cinematica"
-            
+          - href: glossario/cinematica.qmd
+            text: "Cinematica"
