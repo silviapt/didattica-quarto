@@ -1,0 +1,81 @@
+---
+title: "Laboratori virtuali"
+format: html
+---
+## Laboratorio Virtuale: Esplora la Legge Oraria
+
+### Moto rettilineo uniforme
+
+Usa i cursori per vedere come la velocità $v$ cambia l'inclinazione della retta e come $s_0$ sposta il punto di partenza.
+
+```{ojs}
+//| label: fig-mruint
+//| fig-cap: "Grafico interattivo S-T. "
+//| echo: false
+// 1. Creazione degli slider interattivi
+viewof v = Inputs.range([0, 10], {step: 0.1, label: "Velocità v (m/s):", value: 2})
+viewof s0 = Inputs.range([0, 20], {step: 1, label: "Posizione iniziale s₀ (m):", value: 5})
+
+// 2. Calcolo dei punti del grafico in tempo reale
+data = {
+  const t = Array.from({length: 21}, (_, i) => i * 0.5); // Tempo da 0 a 10s ogni 0.5s
+  return t.map(time => ({
+    tempo: time,
+    posizione: s0 + v * time
+  }));
+}
+
+// 3. Rendering del grafico reattivo
+Plot.plot({
+  grid: true,
+  inset: 10,
+  y: {domain: [0, 100], label: "Posizione s (m)"},
+  x: {label: "Tempo t (s)"},
+  marks: [
+    // Linea della traiettoria
+    Plot.line(data, {x: "tempo", y: "posizione", stroke: "steelblue", strokeWidth: 3}),
+    // Punti per evidenziare i dati
+    Plot.dot(data, {x: "tempo", y: "posizione", fill: "white", stroke: "steelblue"}),
+    // Testo dinamico che mostra la formula aggiornata
+    Plot.text([`s(t) = ${s0} + ${v.toFixed(1)} · t`], {x: 1, y: 90, frameAnchor: "top-left", fontSize: 16})
+  ]
+})
+```
+
+### Moto rettilineo uniformemente accelerato
+
+In questo modello, l'accelerazione $a$ è costante. La legge oraria è:
+$$s(t) = s_0 + v_0 t + \frac{1}{2} a t^2$$
+
+nella simulazione, considereremo un oggetto che al momento $t_0 = 0$ è nell'origine dell'asse $s$, cioè $s_0=0$
+
+```{ojs}
+//| label: fig-mruaint
+//| fig-cap: "Grafico interattivo S-T."
+//| echo: false
+
+// 1. Slider per i parametri fisici
+viewof a = Inputs.range([-5, 5], {step: 0.1, label: "Accelerazione a (m/s²):", value: 1})
+viewof v0 = Inputs.range([0, 10], {step: 0.5, label: "Velocità iniziale v₀ (m/s):", value: 0})
+
+// 2. Calcolo della parabola
+data_mrua = {
+  const t = Array.from({length: 41}, (_, i) => i * 0.25); // Tempo da 0 a 10s
+  return t.map(time => ({
+    tempo: time,
+    posizione: 0 + v0 * time + 0.5 * a * (time ** 2)
+  }));
+}
+
+// 3. Grafico
+Plot.plot({
+  grid: true,
+  y: {domain: [-20, 100], label: "Posizione s (m)"},
+  x: {label: "Tempo t (s)"},
+  marks: [
+    Plot.ruleY([0]), // Linea dello zero
+    Plot.line(data_mrua, {x: "tempo", y: "posizione", stroke: "orange", strokeWidth: 3}),
+    Plot.text([`s(t) = ${v0}t + 0.5·${a.toFixed(1)}·t²`], {x: 1, y: 90, frameAnchor: "top-left"})
+  ]
+})
+```
