@@ -135,7 +135,7 @@ Il diagramma orario è una retta: velocità media e velocità istantanea coincid
 Il diagramma orario è una retta che taglia l'asse s nel punto $s_0$.
 
 ```{ojs}
-//| label: fig-mru0
+//| label: fig-mru
 //| fig-cap: "Grafico interattivo S-T. Passa il mouse sulla linea!"
 //| echo: false
 
@@ -168,7 +168,7 @@ Plot.plot({
 Il diagramma orario è una retta che taglia l'asse s nell'origine.
 
 ```{ojs}
-//| label: fig-mru
+//| label: fig-mru0
 //| fig-cap: "Grafico interattivo S-T. Passa il mouse sulla linea!"
 //| echo: false
 
@@ -177,7 +177,7 @@ data_mru0 = {
   const t = Array.from({length: 11}, (_, i) => i);
   return t.map(i => ({
     tempo: i,
-    posizione: 5 + 2 * i // s0 = 5, v = 2
+    posizione: 2 * i // s0 = 5, v = 2
   }));
 }
 
@@ -188,9 +188,9 @@ Plot.plot({
     // La linea (linea continua)
     Plot.line(data_mru0, {x: "tempo", y: "posizione", stroke: "steelblue", strokeWidth: 2}),
     // I punti (markers: true)
-    Plot.dot(data_mru, {x: "tempo", y: "posizione", fill: "steelblue", r: 4}),
+    Plot.dot(data_mru0, {x: "tempo", y: "posizione", fill: "steelblue", r: 4}),
     // Il "passa il mouse" (tooltip interattivo)
-    Plot.tip(data_mru, Plot.pointer({x: "tempo", y: "posizione"}))
+    Plot.tip(data_mru0, Plot.pointer({x: "tempo", y: "posizione"}))
   ],
   x: { label: "Tempo (s)" },
   y: { label: "Posizione (m)", domain: [0, 30] }
@@ -198,7 +198,7 @@ Plot.plot({
 ```
 
 :::
-Per vedere i dati in azione, vai alla [Laboratorio virtuale](virtlab.qmd#fig-mruint).
+Per vedere i dati in azione, vai al [Laboratorio virtuale](virtlab.qmd#fig-mruint).
 :::
 
 
