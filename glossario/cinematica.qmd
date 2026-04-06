@@ -117,6 +117,8 @@ Se assumiamo $t=0$ come istante a partire dal quale si inizia a misurare il temp
 Se all'istante iniziale l'oggetto non è nell'origine, ma in $s_0 \neq 0$: 
 $$s=s_0+vt$$
 
+
+
 ### caso $s_0 = 0$ 
 Se all'istante iniziale l'oggetto è nell'origine: 
 $$s=vt$$ 
@@ -132,11 +134,83 @@ Il diagramma orario è una retta: velocità media e velocità istantanea coincid
 ### caso $s_0 \neq 0$
 Il diagramma orario è una retta che taglia l'asse s nel punto $s_0$.
 
+```{python}
+#| label: fig-mrus
+#| fig-cap: "Legge Oraria del Moto Rettilineo Uniforme"
+#| echo: false
+import plotly.express as px
+import pandas as pd
+
+# Creiamo i dati: tempo da 0 a 10 secondi
+t = list(range(11))
+s = [2 + 5*val for val in t] # s0=2, v=5
+
+df = pd.DataFrame({'Tempo (s)': t, 'Posizione (m)': s})
+
+fig = px.line(df, x='Tempo (s)', y='Posizione (m)', 
+              title='Moto Rettilineo Uniforme',
+              markers=True)
+fig.show()
+```
+
 ### caso $s = 0$ 
 Il diagramma orario è una retta che taglia l'asse s nell'origine.
 
+```{python}
+#| label: fig-mrus0
+#| fig-cap: "Legge Oraria del Moto Rettilineo Uniforme"
+#| echo: false
+import plotly.express as px
+import pandas as pd
+
+# Creiamo i dati: tempo da 0 a 10 secondi
+t = list(range(11))
+s = [ 5*val for val in t] # s0=0, v=5
+
+df = pd.DataFrame({'Tempo (s)': t, 'Posizione (m)': s})
+
+fig = px.line(df, x='Tempo (s)', y='Posizione (m)', 
+              title='Moto Rettilineo Uniforme',
+              markers=True)
+fig.show()
+```
+
 :::
 :::
 
 
+### Laboratorio Virtuale: Esplora la Legge Oraria
+
+Usa i cursori per vedere come la velocità $v$ cambia l'inclinazione della retta e come $s_0$ sposta il punto di partenza.
+
+```{ojs}
+// 1. Creazione degli slider interattivi
+viewof v = Inputs.range([0, 10], {step: 0.1, label: "Velocità v (m/s):", value: 2})
+viewof s0 = Inputs.range([0, 20], {step: 1, label: "Posizione iniziale s₀ (m):", value: 5})
+
+// 2. Calcolo dei punti del grafico in tempo reale
+data = {
+  const t = Array.from({length: 21}, (_, i) => i * 0.5); // Tempo da 0 a 10s ogni 0.5s
+  return t.map(time => ({
+    tempo: time,
+    posizione: s0 + v * time
+  }));
+}
+
+// 3. Rendering del grafico reattivo
+Plot.plot({
+  grid: true,
+  inset: 10,
+  y: {domain: [0, 100], label: "Posizione s (m)"},
+  x: {label: "Tempo t (s)"},
+  marks: [
+    // Linea della traiettoria
+    Plot.line(data, {x: "tempo", y: "posizione", stroke: "steelblue", strokeWidth: 3}),
+    // Punti per evidenziare i dati
+    Plot.dot(data, {x: "tempo", y: "posizione", fill: "white", stroke: "steelblue"}),
+    // Testo dinamico che mostra la formula aggiornata
+    Plot.text([`s(t) = ${s0} + ${v.toFixed(1)} · t`], {x: 1, y: 90, frameAnchor: "top-left", fontSize: 16})
+  ]
+})
+```
 

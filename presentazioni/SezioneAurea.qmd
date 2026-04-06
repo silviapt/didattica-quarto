@@ -22,7 +22,7 @@ Immagina di dividere un segmento in due parti: il rapporto ci dice quante volte 
 
 È il modo in cui mettiamo in relazione le dimensioni di ciò che ci circonda.
 
-![Esempi di rapporto](Rapporti.png){width="50%"}
+![Esempi di rapporto](../img/Rapporti.png){width="50%"}
 
 
 ---
