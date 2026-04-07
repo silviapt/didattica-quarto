@@ -1,5 +1,5 @@
 ---
-title: "Glossario di Fisica"
+title: "Glossario"
 format: html
 ---
 # Cinematica
@@ -88,12 +88,117 @@ Si dice diagramma orario st, o grafico spazio-tempo, il grafico cartesiano della
 :::{.panel-tabset}
 ### La velocità media 
 Nell'intervallo di tempo tra due punti del grafico spazio-tempo la velocità media è uguale al coefficiente angolare della **retta secante** che li unisce.
+```{ojs}
+// Definiamo i dati per la curva blu (posizione s nel tempo t)
+data = [
+  {t: 0, s: 0}, {t: 0.5, s: 30}, {t: 1, s: 75}, {t: 1.5, s: 130}, 
+  {t: 2, s: 200}, {t: 2.5, s: 240}, {t: 3, s: 250}, {t: 4, s: 250}, 
+  {t: 4.5, s: 220}, {t: 5, s: 175}, {t: 5.5, s: 100}, {t: 6, s: 60}, {t: 6.5, s: 0}
+]
+// Calcolo della retta secante rossa tra P1(1, 75) e P2(3, 250)
+secante = [
+  {t: 0.5, s: 75 - 0.5 * (175/2)}, // Estrapolazione per estetica
+  {t: 1, s: 75}, 
+  {t: 3, s: 250},
+  {t: 3.5, s: 250 + 0.5 * (175/2)}
+]
+
+// Rendering del grafico
+chart = Plot.plot({
+  grid: true,
+  inset: 10,
+  x: { label: "t (s)", domain: [0, 7] },
+  y: { label: "s (m)", domain: [0, 300] },
+  marks: [
+    // La curva blu principale
+    Plot.line(data, {x: "t", y: "s", stroke: "blue", strokeWidth: 3, curve: "catmull-rom"}),
+    
+    // La retta secante rossa
+    Plot.line(secante, {x: "t", y: "s", stroke: "red", strokeWidth: 2.5}),
+    
+    // Punti P1 e P2
+    Plot.dot([{t: 1, s: 75}, {t: 3, s: 250}], {x: "t", y: "s", fill: "#0088cc", r: 5}),
+    
+    // Etichette P1 e P2
+    Plot.text([{t: 1, s: 75, name: "P₁"}, {t: 3, s: 250, name: "P₂"}], 
+      {x: "t", y: "s", text: "name", dy: -15, dx: -15, fontSize: 14, fontWeight: "bold"}),
+    
+    // Linee tratteggiate per Δs e Δt
+    Plot.ruleX([1, 3], {y1: 0, y2: (d) => d === 1 ? 75 : 250, strokeDasharray: "4,4", strokeOpacity: 0.5}),
+    Plot.ruleY([75, 250], {x1: 0, x2: (d) => d === 75 ? 1 : 3, strokeDasharray: "4,4", strokeOpacity: 0.5}),
+    
+    // Frecce per gli incrementi
+    Plot.link([{x1: 1, x2: 3, y1: 75, y2: 75}], {x1: "x1", x2: "x2", y1: "y1", y2: "y2", markerEnd: "arrow"}),
+    Plot.link([{x1: 3, x2: 3, y1: 75, y2: 250}], {x1: "x1", x2: "x2", y1: "y1", y2: "y2", markerEnd: "arrow"}),
+    
+    // Testo Δs e Δt
+    Plot.text([{t: 2, s: 60, label: "Δt = 2 s"}], {x: "t", y: "s", text: "label"}),
+    Plot.text([{t: 3.5, s: 162.5, label: "Δs = 175 m"}], {x: "t", y: "s", text: "label"}),
+
+    // Titolo per spiegare il grafico
+    Plot.text(["Retta secante: velocità media fra t1=1s e t2=3s"], {frameAnchor: "top", dy: 10, fontWeight: "bold", fontSize: 16})
+  ]
+})
+```
 
 ### La velocità istantanea 
 La velocità istantanea $v$ in un certo istante $t$ è il coefficiente angolare della **retta tangente** al diagramma orario nel punto di ascissa $t$. 
+
+```{ojs}
+// 1. Dati per la curva blu (posizione s nel tempo t) - invariati
+
+
+// 2. Calcolo del punto di tangenza (Pt) e della retta tangente
+// Scegliamo t=2 come punto interessante per la tangente.
+t_tan = 2;
+s_tan = 200; // Valore misurato dai dati sopra
+
+// Calcoliamo la pendenza (velocità istantanea) approssimativa a t=2.
+// Usiamo la pendenza secante tra i punti adiacenti (1.5 e 2.5) per una buona approssimazione.
+// Pendenza m = (s(2.5) - s(1.5)) / (2.5 - 1.5) = (240 - 130) / 1 = 110 m/s
+slope_v = 110; 
+
+// Definiamo la retta tangente: s - s_tan = slope_v * (t - t_tan)
+// Calcoliamo due punti per disegnare la linea rossa (es. a t=1 e t=3)
+tangentData = [
+  {t: 1, s: s_tan + slope_v * (1 - t_tan)}, // s = 200 + 110*(-1) = 90
+  {t: 3, s: s_tan + slope_v * (3 - t_tan)}  // s = 200 + 110*(1) = 310
+]
+
+// 3. Rendering del grafico aggiornato
+chart_tan = Plot.plot({
+  grid: true,
+  inset: 10,
+  x: { label: "t (s)", domain: [0, 7] },
+  y: { label: "s (m)", domain: [0, 320] }, // Esteso leggermente per la tangente
+  marks: [
+    // La curva blu principale
+    Plot.line(data, {x: "t", y: "s", stroke: "#0088cc", strokeWidth: 3, curve: "catmull-rom"}),
+    
+    // La retta TANGENTE rossa
+    Plot.line(tangentData, {x: "t", y: "s", stroke: "red", strokeWidth: 2.5}),
+    
+    // Punto di tangenza Pt
+    Plot.dot([{t: t_tan, s: s_tan}], {x: "t", y: "s", fill: "#0088cc", r: 5}),
+    
+    // Etichetta Pt
+    Plot.text([{t: t_tan, s: s_tan, name: "Pt"}], 
+      {x: "t", y: "s", text: "name", dy: -15, dx: -15, fontSize: 14, fontWeight: "bold"}),
+    
+    // Linee tratteggiate di proiezione solo per il punto Pt
+    Plot.ruleX([t_tan], {y1: 0, y2: s_tan, strokeDasharray: "4,4", strokeOpacity: 0.5}),
+    Plot.ruleY([s_tan], {x1: 0, x2: t_tan, strokeDasharray: "4,4", strokeOpacity: 0.5}),
+    
+    // Titolo per spiegare il grafico
+    Plot.text(["Retta tangente: velocità istantanea a t=2s"], {frameAnchor: "top", dy: 10, fontWeight: "bold", fontSize: 16})
+  ]
+})
+```
 :::
 
 :::
+
+# Moto rettilineo uniforme
 
 ::: {.callout-note collapse="true" appearance="minimal"}
 ## Moto uniforme 
@@ -139,7 +244,7 @@ Il diagramma orario è una retta che taglia l'asse s nel punto $s_0$.
 //| fig-cap: "Grafico interattivo S-T. Passa il mouse sulla linea!"
 //| echo: false
 
-// 1. Generazione dei dati (come facevi con list e range in Python)
+// 1. Generazione dei dati 
 data_mru = {
   const t = Array.from({length: 11}, (_, i) => i);
   return t.map(i => ({
@@ -196,7 +301,6 @@ Plot.plot({
   y: { label: "Posizione (m)", domain: [0, 30] }
 })
 ```
-
 :::
 Per vedere i dati in azione, vai al [Laboratorio virtuale](virtlab.qmd#fig-mruint).
 :::

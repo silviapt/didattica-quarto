@@ -1,0 +1,103 @@
+---
+title: "Moto vario e uniformemente accelerato"
+format: html
+---
+
+::: {.callout-note collapse="true" appearance="minimal"}
+## Moto vario 
+Un moto nel quale la velocità varia nel tempo si dice moto vario.
+:::
+
+::: {.callout-important collapse="true" appearance="minimal"}
+## Accelerazione media 
+Se $\vec{v_1}$, e $\vec{v_2}$ sono le velocità di un punto materiale in due istanti successivi $t_1$ e $t_2$, l'accelerazione media $\vec{a}_m$, nell'intervallo di tempo $\Delta v= t_2— t_1$ è il rapporto fra la variazione $\Delta \vec{v}=\vec{v_2} — \vec{v_1}$ della velocità e l'intervallo di tempo stesso:
+$$\vec{a}_m=\frac{\Delta \vec{v}}{\Delta t}$$
+
+variazione di velocità (m/s)
+accelerazione media (m/s$^2$) 
+tempo impiegato (s)
+
+L'accelerazione nel SI si misura in metri al secondo quadrato (simbolo m/s$^2$)
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+## Accelerazione istantanea 
+L'accelerazione istantanea $a$ in un istante $t$ è l'accelerazione media calcolata in un intervallo di tempo $\Delta t$ infinitamente piccolo.
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+## Accelerazione in grafico 
+L'accelerazione media nell'intervallo di tempo tra due punti del grafico velocità-tempo è uguale al coefficiente angolare della retta secante che li congiunge.
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+## Spostamento
+Lo spostamento compiuto in un intervallo di tempo $t_2 - t_1$ è espresso dall'area sottesa al grafico velocità-tempo entro l'intervallo considerato, cioè dall'area delimitata dalla curva, dall'asse delle ascisse e dai segmenti verticali condotti per le ascisse $t_1$ e $t_2$.
+:::
+
+
+::: {.callout-note collapse="true" appearance="minimal"}
+## Moto rettilineo uniformemente accelerato 
+Si dice moto rettilineo uniformemente accelerato il moto di un oggetto che si muove con accelerazione costante lungo una traiettoria rettilinea.
+:::
+
+::: {.callout-note collapse="true" appearance="minimal"}
+## Variazione di velocità
+La variazione di velocità $\Delta v$ in un moto rettilineo uniformemente accelerato è **direttamente proporzionale** al tempo $\Delta t$ in cui avviene. Il grafico velocità-tempo corrispondente è una **retta**.
+
+
+Nel moto rettilineo uniformemente accelerato, accelerazione media e istantanea coincidono e sono rappresentate dalla pendenza della retta nel grafico velocità-tempo.
+:::
+
+::: {.callout-important collapse="true" appearance="minimal"}
+## Legge velocità-tempo del moto rettilineo uniformemente accelerato
+
+:::{.panel-tabset}
+
+### partenza da fermo ($v_0 = 0$) 
+
+Se il punto materiale inizia a muoversi da fermo, cioè se $v_0=0$, si ottiene la legge velocità-tempo del moto rettilineo uniformemente accelerato con partenza da fermo:
+$$v=at$$
+
+Nel caso $v_0 = 0$ il grafico velocità-tempo è una retta che passa per l'origine.
+
+### partenza in velocità ($v_0 \neq 0$) 
+
+Se assumiamo $t_0= 0$ come istante iniziale, la legge velocità-tempo del moto rettilineo uniformemente accelerato con partenza in velocità ($v_0 \neq 0$) è:
+$$v=v_0+at$$
+accelerazione (m/s)
+velocità finale (m/s) 
+velocità iniziale (m/s) 
+istante di tempo (s)
+
+
+Nel caso $v_0 \neq 0$ il grafico velocità-tempo è una retta che taglia l'asse $v$ in $v_0$. 
+
+:::
+
+:::
+
+::: {.callout-important collapse="true" appearance="minimal"}
+## Legge oraria del moto rettilineo uniformemente accelerato 
+
+:::{.panel-tabset}
+### partenza da fermo ($v_0= 0$) 
+La legge oraria di un moto rettilineo uniformemente accelerato con partenza da fermo ($v_0 = 0$) è:
+posizione finale (m) 
+posizione iniziale(m)
+istante di tempo (s)
+accelerazione (m/s$^2$)
+$$s=s_0 +\frac{1}{2}at^2$$
+
+### partenza in velocità ($v_0 \neq 0$)
+La legge oraria di un moto uniformemente accelerato con partenza in velocità ($v_0 \neq 0$) è:
+$$s=s_0+v_0 t+\frac{1}{2}at^2$$
+:::
+
+:::
+
+::: {.callout-important collapse="true" appearance="minimal"}
+## Relazione posizione-velocità 
+La relazione posizione-velocità di un moto rettilineo uniformemente accelerato è:
+$$s-s_0=\frac{v^2-v_0^2}{2a}$$
+:::

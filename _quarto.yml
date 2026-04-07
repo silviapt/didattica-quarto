@@ -7,8 +7,10 @@ format:
     theme: cosmo
     link-external-newwindow: true # Apre automaticamente i link esterni/slide in nuove schede
 
+lang: it
+
 website:
-  title: "Il mio Portale Didattico"
+  title: "Traiettorie consapevoli"
   
   navbar:
     left:
@@ -16,8 +18,6 @@ website:
         text: Home
       - href: glossario/cinematica.qmd
         text: Glossario Fisica
-      - href: glossario/virtlab.qmd
-        text: Laboratori virtuali
       - text: Lezioni 
         menu: 
           - href: presentazioni/Equazioni.qmd
@@ -36,6 +36,10 @@ website:
         contents:
           - href: glossario/cinematica.qmd
             text: "Cinematica"
+          - href: glossario/accelerato.qmd
+            text: Moto vario e MRUA  
+          - href: glossario/virtlab.qmd
+            text: Laboratori virtuali  
 
 execute:
   echo: false    # Nasconde il codice in tutto il sito
