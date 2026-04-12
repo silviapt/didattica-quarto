@@ -1,0 +1,68 @@
+---
+title: "Analisi del Moto"
+format: html
+---
+
+## Parametri del Moto
+
+```{ojs}
+//| panel: input
+viewof tipoMoto = Inputs.radio(
+  ["Moto Rettilineo Uniforme", "Moto Uniformemente Accelerato"], 
+  {value: "Moto Uniformemente Accelerato", label: "Tipo di moto:"}
+)
+
+viewof v0 = Inputs.range([-50, 50], {value: 10, step: 1, label: "Velocità iniziale (v₀):"})
+viewof a0 = Inputs.range([-10, 10], {value: 2, step: 0.1, label: "Accellerazione (a₀):"})
+
+// Definizione dei dati
+t_max = 10
+punti = 100
+t_values = d3.range(0, t_max, t_max / punti)
+
+// Calcolo dell'accelerazione effettiva in base alla scelta
+accel = tipoMoto === "Moto Rettilineo Uniforme" ? 0 : a0
+
+data = t_values.map(t => {
+  return {
+    t: t,
+    s: v0 * t + 0.5 * accel * Math.pow(t, 2),
+    v: v0 + accel * t,
+    a: accel
+  }
+})
+
+// Layout dei grafici
+import {Plot} from "@observablehq/plot"
+
+// Grafico Spazio-Tempo (s-t)
+Plot.plot({
+  title: "Spazio - Tempo (s-t)",
+  marks: [
+    Plot.lineY(data, {x: "t", y: "s", stroke: "blue"}),
+    Plot.ruleY([0])
+  ],
+  grid: true
+})
+
+// Grafico Velocità-Tempo (v-t)
+Plot.plot({
+  title: "Velocità - Tempo (v-t)",
+  marks: [
+    Plot.lineY(data, {x: "t", y: "v", stroke: "green"}),
+    Plot.ruleY([0])
+  ],
+  grid: true
+})
+
+// Grafico Accelerazione-Tempo (a-t)
+Plot.plot({
+  title: "Accelerazione - Tempo (a-t)",
+  marks: [
+    Plot.lineY(data, {x: "t", y: "a", stroke: "red"}),
+    Plot.ruleY([0])
+  ],
+  y: {domain: [-12, 12]}, // Range fisso per non far "saltare" il grafico
+  grid: true
+})
+```

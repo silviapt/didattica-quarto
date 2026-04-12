@@ -2,7 +2,14 @@
 title: "Equazioni"
 format:
   revealjs:
-    incremental: true   
+    incremental: true  
+    theme: sky
+    chalkboard: 
+      buttons: true    # Mostra i tastini della lavagna in basso a sinistra
+      toggleNotesButton: true
+    # Altre opzioni utili per la didattica
+    slide-number: true
+    preview-links: auto 
 ---
 
 ## Identità {auto-animate="true"}

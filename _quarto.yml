@@ -24,6 +24,10 @@ website:
             text: Equazioni di I grado
           - href: presentazioni/SezioneAurea.qmd
             text: Sezione aurea
+      - text: Schemi
+        menu:
+          - href: Equa.qmd
+            text: Equazioni di I grado
 
   # LA SIDEBAR DEVE ESSERE ALLINEATA A NAVBAR
   sidebar:
