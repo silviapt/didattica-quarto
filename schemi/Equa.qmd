@@ -1,15 +1,14 @@
 ---
-title: "Equazioni di I grado"
+title: "Risolvere un'equazione di primo grado"
 format: html
 ---
-
-## Risolvere un'equazione
 
 Risolvere un'equazione di I grado significa trasformarlo nella forma normale
 $$ax=b$$
 
 Il primo passo è trasformare l'equazione iniziale in una somma di monomi (termini tipo $2x$, $3x^2$, 5, ...). 
 
+# Gestire le parentesi
 
 Ma prima, si deve considerare le **parentesi ()**
 
@@ -109,7 +108,7 @@ $$... =(3x-4)(3x-4) ...$$
 
 :::{#Regolaparentesi}
 
-si moltiplicano i membri a due a due, poi si semplifica e si toglie la parentesi come scritto sopra
+Si moltiplicano i membri a due a due, poi si semplifica e si toglie la parentesi come scritto sopra
 
 \begin{align*}
 6x^2-(3x-4)(2x-1)&= 0 \\ 
@@ -133,7 +132,7 @@ si moltiplicano i membri a due a due, poi si semplifica e si toglie la parentesi
 :::
 
 :::{#Regolasommadifferenza}
-si applica il prodotto notevole
+Si applica il prodotto notevole
 $$(A + B)(A - B) =A^2 - B^2$$
 si scrive la differenza (-) dei quadrati dei due monomi
 
@@ -157,7 +156,7 @@ si scrive la differenza (-) dei quadrati dei due monomi
 :::
 
 :::{#Regolaquadrati}
-si applica il prodotto notevole
+Si applica il prodotto notevole
 $$(A \pm B)^2=A^2 \pm 2AB + B^2$$
 
 \begin{align*}
@@ -169,9 +168,25 @@ $$(A \pm B)^2=A^2 \pm 2AB + B^2$$
 :::
 
 
-## 🏁 La fase finale: "Sposta e Risolvi"
+# 🏁 La fase finale: "Sposta e Risolvi"
 
-Una volta eliminate tutte le parentesi e fatte le moltiplicazioni, ti troverai con una serie di monomi. Ora devi applicare la Regola del Trasporto.
+Una volta eliminate tutte le parentesi e fatte le moltiplicazioni, ti troverai con una serie di monomi. 
+
+::: {.callout-tip title="Liberati del superfluo!"}
+Puoi semplificare i monomi:
+
+- opposti, se sono nello stesso membro;
+- uguali, se sono sono in membri diversi.
+
+\begin{align*}
+3x\cancel{+5}\cancel{-5} &= 5x\\
+\cancel{2x}-3+5x&= 4+\cancel{2x} \\
+2x+5 &= 7-2x \text{ Non si semplifica!}
+\end{align*}\\
+
+:::
+
+Ora devi applicare la Regola del Trasporto.
 
 1. Ordinare (Sinistra e Destra). Sposta tutti i termini con la $x$ a sinistra dell'uguale e tutti i numeri (termini noti) a destra.
 

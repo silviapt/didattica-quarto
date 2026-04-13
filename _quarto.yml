@@ -28,6 +28,12 @@ website:
         menu:
           - href: schemi/Equa.qmd
             text: Equazioni di I grado
+      - text: Simulazioni
+        menu:
+          - href: simulazioni/Grafici.qmd
+            text: Grafici s-v-a 
+          - href: simulazioni/Moto-Vario.qmd
+            text: Moto vario   
 
   # LA SIDEBAR DEVE ESSERE ALLINEATA A NAVBAR
   sidebar:

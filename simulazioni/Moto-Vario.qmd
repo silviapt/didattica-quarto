@@ -1,0 +1,158 @@
+---
+title: "Moto vario"
+format: html
+---
+:::{.panel-tabset}
+
+## Moto Vario
+```{ojs}
+// --- CONTROLLI ---
+viewof t1_v = Inputs.range([0, 10], {step: 1, label: "Tempo 1 (s) - Secante", value: 2})
+viewof t2_v = Inputs.range([0, 10], {step: 1, label: "Tempo 2 (s) - Secante", value: 8})
+
+// Mostriamo lo slider solo se mostraTangente è true
+viewof t_tan = mostraTangente 
+  ? Inputs.range([0, 10], {step: 0.1, label: "Tempo Istantaneo (s)", value: 5}) 
+  : html`<input type="hidden" value="5">` // Placeholder invisibile per mantenere il valore numerico
+
+// Variabile di sicurezza per i calcoli: se t_tan non è un numero, usa 5
+t_tan_safe = typeof t_tan === "number" ? t_tan : 5
+
+viewof mostraTangente = Inputs.toggle({label: "Abilita studio Tangente", value: false})
+mostraSecante1 = true 
+
+// --- FUNZIONI MATEMATICHE ---
+s_vario1 = (t) => 0.5 * Math.pow(t, 2) - 0.02 * Math.pow(t, 3) + 2 * t
+v_ist1 = (t) => t - 0.06 * Math.pow(t, 2) + 2
+
+// Dati curva
+data_vario1 = Array.from({length: 101}, (_, i) => ({ t: i/10, s: s_vario1(i/10) }))
+
+// Calcolo Secante con nome univoco secante_info1
+secante_info1 = {
+  const s1 = s_vario1(t1_v), s2 = s_vario1(t2_v);
+  const m = t1_v === t2_v ? 0 : (s2 - s1) / (t2_v - t1_v);
+  const q = s1 - m * t1_v;
+  return { m, punti: [{t: 0, s: q}, {t: 10, s: m * 10 + q}] };
+}
+
+// Calcolo Tangente con valore safe
+tangente_info1 = {
+  const t = t_tan_safe;
+  const s0 = s_vario1(t), v = v_ist1(t);
+  const m = v, q = s0 - m * t;
+  return { 
+    v, 
+    punti: [{t: t - 1.5, s: s0 - v * 1.5}, {t: t + 1.5, s: s0 + v * 1.5}],
+    t_base: t, 
+    s_base: s0 
+  };
+}
+
+// --- GRAFICO ---
+Plot.plot({
+  grid: true,
+  x: { label: "Tempo (t) [s]", domain: [0, 10] },
+  y: { label: "Posizione (s) [m]", domain: [0, 50] },
+  marks: [
+    // La curva
+    Plot.line(data_vario1, {x: "t", y: "s", stroke: "steelblue", strokeWidth: 3}),
+
+    // Logica Secante (Sempre visibile o controllata da mostraSecante1)
+    mostraSecante1 ? [
+      Plot.line(secante_info1.punti, {x: "t", y: "s", stroke: "orange", strokeDasharray: "4,4"}),
+      Plot.dot([t1_v, t2_v], {x: d => d, y: d => s_vario1(d), fill: "orange", r: 5}),
+      Plot.text([0], {
+        frameAnchor: "top-left", dx: 10, dy: 20, fill: "orange", fontWeight: "bold",
+        text: d => `Velocità Media: ${secante_info1.m.toFixed(2)} m/s`
+      })
+    ] : null,
+
+    // Logica Tangente (Attivata dal toggle)
+    mostraTangente ? [
+      Plot.line(tangente_info1.punti, {x: "t", y: "s", stroke: "red", strokeWidth: 2}),
+      Plot.dot([tangente_info1.t_base], {x: d => d, y: d => tangente_info1.s_base, fill: "red", r: 5}),
+      Plot.text([0], {
+        frameAnchor: "top-left", dx: 10, dy: 40, fill: "red", fontWeight: "bold",
+        text: d => `Velocità Istantanea: ${tangente_info1.v.toFixed(2)} m/s`
+      })
+    ] : null
+  ]
+})
+```
+
+
+## Moto vario a tratti
+
+```{ojs}
+/// Slider per i due punti della secante (passi di 1 secondo)
+viewof t1_fixed = Inputs.range([0, 10], {step: 1, label: "Tempo 1 (s)", value: 2})
+viewof t2_fixed = Inputs.range([0, 10], {step: 1, label: "Tempo 2 (s)", value: 7})
+// Flag per mostrare/nascondere il risultato della velocità
+viewof mostraVelocita = Inputs.toggle({label: "Mostra valore velocità media", value: false})
+
+// Nuova funzione del moto a tratti calcolata per punti interi:
+// 0-2s: v = 10 m/s  -> s(2)=20
+// 2-4s: v = 5 m/s   -> s(4)=30
+// 4-6s: v = 0 m/s   -> s(6)=30 (SOSTA)
+// 6-8s: v = -10 m/s -> s(8)=10 (RITORNO)
+// 8-10s: v = 0 m/s  -> s(10)=10 (SECONDA SOSTA)
+s_didattico = (t) => {
+  if (t <= 2) return 10 * t;           // Salita ripida
+  if (t <= 4) return 20 + 5 * (t - 2); // Salita dolce
+  if (t <= 6) return 30;               // Sosta in alto
+  if (t <= 8) return 30 - 10 * (t - 6);// Discesa
+  return 10;                           // Sosta finale
+}
+
+// Dati per il grafico
+data_didattico = Array.from({length: 101}, (_, i) => {
+  const t = i / 10;
+  return { t: t, s: s_didattico(t) };
+})
+
+// Calcolo parametri retta secante
+secante_info = {
+  const s1 = s_didattico(t1_fixed);
+  const s2 = s_didattico(t2_fixed);
+  const m = t1_fixed === t2_fixed ? 0 : (s2 - s1) / (t2_fixed - t1_fixed);
+  const q = s1 - m * t1_fixed;
+  return { m, q, p1: [t1_fixed, s1], p2: [t2_fixed, s2] };
+}
+
+// Rendering
+Plot.plot({
+  grid: true,
+  x: { label: "Tempo (t) [s]", domain: [0, 10], ticks: 10 },
+  y: { label: "Posizione (s) [m]", domain: [0, 40] },
+  marks: [
+    // Curva del moto (verde scuro)
+    Plot.line(data_didattico, {x: "t", y: "s", stroke: "#065f46", strokeWidth: 3}),
+    
+    // Retta secante (arancione, estesa)
+    Plot.ruleY([0], {stroke: "#ccc"}), 
+    Plot.line([{t: 0, s: secante_info.q}, {t: 10, s: secante_info.m * 10 + secante_info.q}], 
+      {x: "t", y: "s", stroke: "orange", strokeWidth: 2, strokeDasharray: "4,4"}),
+    
+    // Punti di controllo
+    Plot.dot([t1_fixed, t2_fixed], {x: d => d, y: d => s_didattico(d), fill: "orange", r: 6}),
+    
+    // Overlay testo per velocità media
+    mostraVelocita ? Plot.text([0], {
+      frameAnchor: "top",
+      dy: 20,
+      text: d => `Velocità Media (pendenza secante): ${secante_info.m.toFixed(2)} m/s`,
+      fontSize: 16,
+      fontWeight: "bold",
+      fill: "orange"
+    }):null,
+
+    // Etichette coordinate
+    Plot.text([t1_fixed, t2_fixed], {
+      x: d => d, y: d => s_didattico(d),
+      text: d => `(${d}s, ${s_didattico(d)}m)`,
+      textAnchor: "start", dx: 8, dy: -8
+    })
+  ]
+})
+```
