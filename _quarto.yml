@@ -34,6 +34,8 @@ website:
             text: Grafici s-v-a 
           - href: simulazioni/Moto-Vario.qmd
             text: Moto vario   
+          - href: simulazioni/scontri.qmd
+            text: Moto in direzioni opposte  
 
   # LA SIDEBAR DEVE ESSERE ALLINEATA A NAVBAR
   sidebar:
