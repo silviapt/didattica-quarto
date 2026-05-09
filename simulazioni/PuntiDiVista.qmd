@@ -1,0 +1,108 @@
+---
+title: "Moto Rettilineo Uniforme: Confronto tra due oggetti"
+format: html
+---
+::: {.panel-tabset}
+
+## Anna
+
+Anna esce di casa. Ha appena riattaccato col suo ragazzo che abita 700 m più avanti sulla sua via ed è impaziente di vederlo. Riflette:
+"Ahia, che male lo strappo alla coscia che mi sono fatta ieri a pallavolo. Non ce la faccio a camminare veloce, ma se io cammino diciamo a 1,5 m/s, lui è più veloce e farà almeno  2,0 m/s basteranno quattro minuti per incontrarci!
+
+Dopo 30 secondi, riceve una telefonata da Marco. "Scusami, amore, ma la mamma mi ha trattenuto, voleva sapere del voto di storia... mi ci è voluto un po' per calmarla! Parto adesso". Anna considera in tutto 35 secondi.
+
+Anna prova un po' di disappunto, ma non ce la fa proprio ad aumentare il passo e pensa:
+"Adesso ci vorranno in tutto più di quattro minuti, meno male che 30 secondi sono già passati!"
+
+## Marco
+Anche Marco non vede l'ora di uscire, ma proprio quando sta per uscire la mamma lo interrompe. A questo punto le cose sono due: o taglia corto che non sono affari suoi ed esce sbattendo la porta o aspetta pazientemente che le passi.  In un (eterno!) mezzo minuto la mamma si sfoga e lui può uscire senza rompere i ponti. Chiama Anna e l'avverte. In tutto ha perso 35 secondi, ma l'interazione l'ha un po' turbato e non gli viene di aumentare il passo.
+
+## Andrea
+Andrea è seduto su una panchina di un parchetto che dà sul viale. In lontananza vede Anna uscire di casa
+:::
+
+``` {ojs}
+// Caricamento di D3 se non già presente
+d3 = require("d3@7")
+// Controlli Oggetto 1 (Blu)
+viewof s0_1 = Inputs.select(new Map([["Origine", 0], ["700", 700]]),{ label: "Posizione Iniziale Anna"})
+viewof r_01 = Inputs.select(new Map([["Nessuno", 0], ["35 secondi", 35], ["-35 secondi", -35]]),{ label: "Ritardo Anna"})
+viewof v1 = Inputs.select(new Map([["Positiva", 1.5], ["Negativa", -1.5]]),{ label: "Velocità Anna"})
+
+// Controlli Oggetto 2 (Rosso)
+viewof s0_2 = Inputs.select(new Map([["Origine", 0], ["700", 700]]),{ label: "Posizione Iniziale Marco"})
+viewof r_02 = Inputs.select(new Map([["Nessuno", 0], ["35 secondi", 35], ["-35 secondi", -35]]),{ label: "Ritardo Marco"})
+viewof v2 = Inputs.select(new Map([["Positiva", 2.0], ["Negativa", -2.0]]),{ label: "Velocità Marco"})
+
+// Controllo unico per il Tempo
+viewof tempo = Inputs.range([0, 250], {value: 0, step: 10, label: "Tempo (t):"})
+
+// Calcolo posizioni istantanee
+pos1 = s0_1 + v1 * Math.max(0, tempo - r_01)
+pos2 = s0_2 + v2 * Math.max(0, tempo - r_02)
+
+```
+
+
+```{ojs}
+
+// 1. Definiamo i dati in modo semplice
+ticks = [0, 100, 200, 300, 400, 500, 600, 700]
+scale = 0.85
+offset = 50
+tacche= ticks.map(m => svg`
+    <g>
+      <line x1="${offset + (m * scale)}" y1="95" x2="${offset + (m * scale)}" y2="105" stroke="black" stroke-width="1.5" />
+      <text x="${offset + (m * scale)}" y="125" font-size="11" text-anchor="middle" fill="black" font-family="sans-serif">${m}</text>
+    </g>
+  `)
+
+// 2. Creiamo l'ambiente grafico
+svg`<svg width="790" height="150" style="background: white; border: 1px solid #ccc; border-radius: 8px;">
+
+  <!-- 1. Definizione della punta della freccia -->
+  <defs>
+    <marker id="frecciaDestra" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <!-- Disegna un triangolo: punta a destra (x=9), base a sinistra (x=0) -->
+      <path d="M0,0 L0,6 L9,3 z" fill="black" />
+    </marker>
+     <marker id="frecciaSinistra" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <!-- Disegna un triangolo: punta a destra (x=9), base a sinistra (x=0) -->
+      <path d="M9,0 L9,6 L0,3 z" fill="black" />
+    </marker>
+  </defs>
+  
+  <line x1="${offset}" y1="100" x2="${offset + (800 * scale)}" y2="100" stroke="black" stroke-width="2" marker-end="url(#frecciaSinistra)" />
+
+  ${tacche}
+    
+  <circle cx="${offset + (pos1 * scale)}" cy="70" r="7" fill="#007bff" />
+  <text x="${offset + (pos1 * scale)}" y="55" text-anchor="middle" font-size="12" fill="#007bff" font-weight="bold">1</text>
+
+  <circle cx="${offset + (pos2 * scale)}" cy="35" r="7" fill="#dc3545" />
+  <text x="${offset + (pos2 * scale)}" y="20" text-anchor="middle" font-size="12" fill="#dc3545" font-weight="bold">2</text>
+</svg>`
+
+import {Plot} from "@observablehq/plot"
+
+// Dati per le rette complete
+punti_grafico = d3.range(0, 250, 10).flatMap(t => [
+  { t: t, s: s0_1 + v1 * t, obj: "Oggetto 1" },
+  { t: t, s: s0_2 + v2 * Math.max(0, t - r_02), obj: "Oggetto 2" }
+])
+
+Plot.plot({
+  grid: true,
+  x: { label: "Tempo (s)", domain: [0, 250] },
+  y: { label: "Posizione (m)", domain: [0, 800] },
+  color: { domain: ["Oggetto 1", "Oggetto 2"], range: ["#007bff", "#dc3545"] },
+  marks: [
+    Plot.ruleY([0], {strokeOpacity: 0.2}),
+    Plot.lineY(punti_grafico, {x: "t", y: "s", stroke: "obj", strokeWidth: 2.5}),
+    
+    // Evidenziatore tempo attuale
+    Plot.ruleX([tempo], {stroke: "#444", strokeDasharray: "5,5"}),
+    Plot.dot([{t: tempo, s: pos1}, {t: tempo, s: pos2}], {x: "t", y: "s", fill: "black", r: 4})
+  ]
+})
+```

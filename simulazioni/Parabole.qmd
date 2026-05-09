@@ -1,0 +1,83 @@
+---
+title: "Simulatore di Disequazioni di Secondo Grado"
+format: html
+---
+
+### Parametri della Parabola
+Inserisci i coefficienti del polinomio $ax^2 + bx + c$ e scegli il verso della disequazione. La zona rossa sull'asse delle $x$ ci dà la soluzione dell'equazione.
+
+```{ojs}
+//| panel: input
+viewof a = Inputs.number({label: "Coefficiente a", value: 1, step: 0.1});
+viewof b = Inputs.number({label: "Coefficiente b", value: -2, step: 0.1});
+viewof c = Inputs.number({label: "Coefficiente c", value: -3, step: 0.1});
+viewof segno = Inputs.radio(["P(x) > 0", "P(x) < 0"], {label: "Segno", value: "P(x) > 0"});
+
+// Calcolo della funzione e dei punti di intersezione
+f = (x) => a * x**2 + b * x + c;
+
+// Generazione dati per la curva
+data = {
+  const points = [];
+  for (let x = -10; x <= 10; x += 0.1) {
+    points.push({x: x, y: f(x)});
+  }
+  return points;
+}
+
+// Calcolo discriminante e radici per evidenziare i punti sull'asse x
+delta = b**2 - 4 * a * c;
+roots = {
+  if (delta < 0) return [];
+  if (delta === 0) return [-b / (2 * a)];
+  return [(-b - Math.sqrt(delta)) / (2 * a), (-b + Math.sqrt(delta)) / (2 * a)];
+}
+
+// Logica per determinare la soluzione sull'asse x
+// Creiamo un array di segmenti spessi per l'asse X
+solutionSegments = {
+  const step = 0.05;
+  const sol = [];
+  for (let x = -10; x <= 10; x += step) {
+    const val = f(x);
+    const satisfies = (segno === "P(x) > 0") ? val > 0 : val < 0;
+    if (satisfies) {
+      sol.push({x: x, y: 0});
+    }
+  }
+  return sol;
+}
+
+Plot.plot({
+  grid: true,
+  x: {domain: [-7, 7]},
+  y: {domain: [-10, 10]},
+  marks: [
+    // Area Gialla (Semipiano risolutivo)
+    Plot.areaY(data, {
+      x: "x", 
+      y: "y", 
+      fill: "yellow", 
+      fillOpacity: 0.3,
+      // Filtra l'area in base al segno scelto
+      filter: d => (segno === "P(x) > 0" ? d.y > 0 : d.y < 0)
+    }),
+
+    // Asse X (linea base)
+    Plot.ruleY([0]),
+    Plot.ruleX([0]),
+
+    // Tratto SPESSO sull'asse X per la soluzione
+    Plot.dot(solutionSegments, {x: "x", y: "y", r: 2, fill: "red"}),
+
+    // La Parabola
+    Plot.line(data, {x: "x", y: "y", strokeWidth: 2, stroke: "blue"}),
+
+    // Punti di intersezione (Radici)
+    Plot.dot(roots, {x: d => d, y: 0, r: 5, fill: "black", stroke: "white"}),
+    
+    // Testo per le radici
+    Plot.text(roots, {x: d => d, y: 0, text: d => d.toFixed(2), dy: -15})
+  ]
+})
+```
