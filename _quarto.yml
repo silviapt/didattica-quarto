@@ -24,6 +24,8 @@ website:
             text: Equazioni di I grado
           - href: presentazioni/SezioneAurea.qmd
             text: Sezione aurea
+          - href: presentazioni/DisequazioneFratta.qmd
+            text: Disequazioni fratte  
       - text: Schemi
         menu:
           - href: schemi/Equa.qmd
@@ -35,7 +37,11 @@ website:
           - href: simulazioni/Moto-Vario.qmd
             text: Moto vario   
           - href: simulazioni/scontri.qmd
-            text: Moto in direzioni opposte  
+            text: Moto in direzioni opposte 
+          - href: simulazioni/scontri.qmd
+            text: Moto in direzioni opposte
+          - href: simulazioni/Parabole.qmd
+            text: Disequazioni di II grado    
 
   # LA SIDEBAR DEVE ESSERE ALLINEATA A NAVBAR
   sidebar:
