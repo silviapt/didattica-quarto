@@ -30,6 +30,8 @@ website:
         menu:
           - href: schemi/Equa.qmd
             text: Equazioni di I grado
+          - href: schemi/DisIIgrado.qmd
+            text: Disequazioni di II grado  
       - text: Simulazioni
         menu:
           - href: simulazioni/Grafici.qmd
