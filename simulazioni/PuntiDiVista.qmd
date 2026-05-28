@@ -18,19 +18,19 @@ Anna prova un po' di disappunto, ma non ce la fa proprio ad aumentare il passo e
 Anche Marco non vede l'ora di uscire, ma proprio quando sta per uscire la mamma lo interrompe. A questo punto le cose sono due: o taglia corto che non sono affari suoi ed esce sbattendo la porta o aspetta pazientemente che le passi.  In un (eterno!) mezzo minuto la mamma si sfoga e lui può uscire senza rompere i ponti. Chiama Anna e l'avverte. In tutto ha perso 35 secondi, ma l'interazione l'ha un po' turbato e non gli viene di aumentare il passo.
 
 ## Andrea
-Andrea è seduto su una panchina di un parchetto che dà sul viale. In lontananza vede Anna uscire di casa
+Andrea è su una panchina di un parchetto che dà sul viale. In lontananza vede Anna uscire di casa e non può fare a meno di notare quanto è bella. Si avvicina muovendosi lentamente. Andrea sta pensando di alzarsi, quando il rumore di un clackson, 35 secondi dopo lo fa voltare: Marco si sta uscendo di casa! Andrea non vuole vedere Marco che la bacia, ma lei è così bella! Fa un calcolo veloce, lei viaggia a 1,5 m/s, mentre lui farà quasi 2 m/s. La casa di Marco sarà a 370 m, quella di Anna a 330 m. Deve calcolare quando si incontreranno per andare via di lì... 
 :::
 
 ``` {ojs}
 // Caricamento di D3 se non già presente
 d3 = require("d3@7")
 // Controlli Oggetto 1 (Blu)
-viewof s0_1 = Inputs.select(new Map([["Origine", 0], ["700", 700]]),{ label: "Posizione Iniziale Anna"})
+viewof s0_1 = Inputs.select(new Map([["Origine", 0], ["700", 700],["330", -330]]),{ label: "Posizione Iniziale Anna"})
 viewof r_01 = Inputs.select(new Map([["Nessuno", 0], ["35 secondi", 35], ["-35 secondi", -35]]),{ label: "Ritardo Anna"})
 viewof v1 = Inputs.select(new Map([["Positiva", 1.5], ["Negativa", -1.5]]),{ label: "Velocità Anna"})
 
 // Controlli Oggetto 2 (Rosso)
-viewof s0_2 = Inputs.select(new Map([["Origine", 0], ["700", 700]]),{ label: "Posizione Iniziale Marco"})
+viewof s0_2 = Inputs.select(new Map([["Origine", 0], ["700", 700],["370", 370]]),{ label: "Posizione Iniziale Marco"})
 viewof r_02 = Inputs.select(new Map([["Nessuno", 0], ["35 secondi", 35], ["-35 secondi", -35]]),{ label: "Ritardo Marco"})
 viewof v2 = Inputs.select(new Map([["Positiva", 2.0], ["Negativa", -2.0]]),{ label: "Velocità Marco"})
 
@@ -45,7 +45,6 @@ pos2 = s0_2 + v2 * Math.max(0, tempo - r_02)
 
 
 ```{ojs}
-
 // 1. Definiamo i dati in modo semplice
 ticks = [0, 100, 200, 300, 400, 500, 600, 700]
 scale = 0.85
@@ -72,7 +71,7 @@ svg`<svg width="790" height="150" style="background: white; border: 1px solid #c
     </marker>
   </defs>
   
-  <line x1="${offset}" y1="100" x2="${offset + (800 * scale)}" y2="100" stroke="black" stroke-width="2" marker-end="url(#frecciaSinistra)" />
+  <line x1="${offset}" y1="100" x2="${offset + (800 * scale)}" y2="100" stroke="black" stroke-width="2" marker-end="url(#frecciaDestra)" />
 
   ${tacche}
     
@@ -87,15 +86,15 @@ import {Plot} from "@observablehq/plot"
 
 // Dati per le rette complete
 punti_grafico = d3.range(0, 250, 10).flatMap(t => [
-  { t: t, s: s0_1 + v1 * t, obj: "Oggetto 1" },
-  { t: t, s: s0_2 + v2 * Math.max(0, t - r_02), obj: "Oggetto 2" }
+  { t: t, s: s0_1 + v1 * Math.max(0,t-r_01), obj: "Anna" },
+  { t: t, s: s0_2 + v2 * Math.max(0,t-r_02), obj: "Marco" }
 ])
 
 Plot.plot({
   grid: true,
   x: { label: "Tempo (s)", domain: [0, 250] },
   y: { label: "Posizione (m)", domain: [0, 800] },
-  color: { domain: ["Oggetto 1", "Oggetto 2"], range: ["#007bff", "#dc3545"] },
+  color: { domain: ["Anna", "Marco"], range: ["#007bff", "#dc3545"] },
   marks: [
     Plot.ruleY([0], {strokeOpacity: 0.2}),
     Plot.lineY(punti_grafico, {x: "t", y: "s", stroke: "obj", strokeWidth: 2.5}),

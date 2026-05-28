@@ -1,0 +1,171 @@
+---
+title: "The Math Squad Shuffle"
+format: html
+resources:
+  - "dati_plickers.csv" # Forza l'inclusione del file
+---
+
+::: {.panel-tabset}
+
+### Manche 1
+```{ojs}
+html`${m1_groups.map((g, i) => html`
+<div style="margin-bottom: 10px; padding: 5px; border-left: 4px solid #3498db; background: #f8f9fa;">
+    <span style="font-weight: bold; color: #2c3e50;">GRUPPO ${i+1}</span> 
+    <span style="margin-left: 12px; font-style: italic;">(${g.groupScore} punti)</span><br>
+    <div style="font-size: 1.2em; margin-top: 5px;">
+      ${g.members.map(m => m["First name"]).join(" • ")}
+    </div>
+  </div>
+`)}`
+```
+
+### Manche 2
+```{ojs}
+html`${m2_groups.map((g, i) => html`
+<div style="margin-bottom: 10px; padding: 5px; border-left: 4px solid #3498db; background: #f8f9fa;">
+    <span style="font-weight: bold; color: #2c3e50;">GRUPPO ${i+1}</span> 
+    <span style="margin-left: 12px; font-style: italic;">(${g.groupScore} punti)</span><br>
+    <div style="font-size: 1.2em; margin-top: 5px;">
+      ${g.members.map(m => m["First name"]).join(" • ")}
+    </div>
+  </div>
+`)}`
+
+```
+
+### Manche 3
+```{ojs}
+html`${m3_groups.map((g, i) => html`
+<div style="margin-bottom: 10px; padding: 5px; border-left: 4px solid #3498db; background: #f8f9fa;">
+    <span style="font-weight: bold; color: #2c3e50;">GRUPPO ${i+1}</span> 
+    <span style="margin-left: 12px; font-style: italic;">(${g.groupScore} punti)</span><br>
+    <div style="font-size: 1.2em; margin-top: 5px;">
+      ${g.members.map(m => m["First name"]).join(" • ")}
+    </div>
+  </div>
+`)}`
+```
+
+### Classifica finale
+```{ojs}
+Inputs.table(classificaFinale, {
+  columns: ["name", "total"],
+  header: { name: "Studente", total: "Punti Totali" }
+})
+```
+### Inserisci i dati
+```{ojs}
+viewof rawPaste = Inputs.textarea({
+  placeholder: "Incolla qui il contenuto del CSV...",
+  rows: 10,
+  width: "100%"
+})
+
+// Crea un menu a tendina con le 3 opzioni
+viewof manche = Inputs.select(["prima", "seconda", "terza"], {
+  value: "prima", // Valore iniziale
+  label: "Seleziona fase"
+});
+```
+:::
+
+
+```{ojs}
+// --- LOGICA DI ELABORAZIONE ---
+// Funzione universale per pulire e parsare i dati incollati
+function parsePlickers(rawText) {
+  if (rawText.length < 10) return [];
+  const lines = rawText.split(/\r?\n/);
+  const clean = lines.slice(2).filter(l => l.trim() !== "").join("\n");
+  return d3.csvParse(clean).filter(d => d["First name"] && d["First name"].trim() !== "");
+}
+
+
+
+
+// Funzione per creare i gruppi basandosi sui dati di QUELLA manche
+function createOldGroups(students) {
+  if (students.length === 0) return [];
+  const shuffled = d3.shuffle([...students]);
+  const size = 4;
+  const groups = [];
+  for (let i = 0; i < shuffled.length; i += size) {
+    const members = shuffled.slice(i, i + size);
+    const groupScore = d3.sum(members, d => Number(d.Correct) || 0);
+    groups.push({ members, groupScore });
+  }
+  return groups;
+}
+function createGroups(students) {
+  if (students.length === 0) return [];
+  
+  const shuffled = d3.shuffle([...students]);
+  const targetSize = 4;
+  const groups = [];
+  for (let i = 0; i < shuffled.length; i += targetSize) {
+    const members = shuffled.slice(i, i + targetSize);
+    // Calcola il punteggio reale sommando i "Correct" dei presenti
+    let groupScore = d3.sum(members, d => Number(d.Correct) || 0);
+    // Se il gruppo è incompleto (meno di 4), applica la correzione
+    if (members.length < targetSize) {
+      const missingCount = targetSize - members.length;
+      // Calcola la media dei punteggi dei membri presenti
+      // Usiamo Math.max(1, members.length) per evitare divisioni per zero se per errore il gruppo fosse vuoto
+      const averageScore = Math.round(groupScore / Math.max(1, members.length));
+      // Aggiunge il punteggio "virtuale" per i membri mancanti
+      groupScore += averageScore * missingCount;
+    }
+    groups.push({ members, groupScore });
+  }
+  return groups;
+}
+
+mutable m1_groups = [];
+mutable m2_groups = [];
+mutable m3_groups = [];
+
+// Questa funzione non restituisce nulla, ma "scrive" nei Mutable
+{
+  //| echo: false
+  const dati = parsePlickers(rawPaste);
+  
+  if (dati.length > 0) {
+    if (manche === "prima") {
+      mutable m1_groups = createGroups(dati); // Assegnazione diretta, senza 'mutable'
+      rawPaste.value = ""; 
+    } else if (manche === "seconda") {
+      mutable m2_groups = createGroups(dati);
+      rawPaste.value = ""; 
+    } else if (manche === "terza") {
+      mutable m3_groups = createGroups(dati);
+      rawPaste.value = ""; 
+    }
+  }
+  null; 
+}
+
+
+// CALCOLO CLASSIFICA INDIVIDUALE FINALE
+classificaFinale = {
+  const scores = new Map();
+  
+  const processManche = (groups) => {
+    groups.forEach(g => {
+      g.members.forEach(m => {
+        const id = `${m["First name"]} ${m["Last Name"]}`;
+        const current = scores.get(id) || 0;
+        scores.set(id, current + g.groupScore);
+      });
+    });
+  };
+
+  processManche(m1_groups);
+  processManche(m2_groups);
+  processManche(m3_groups);
+
+  return Array.from(scores, ([name, total]) => ({ name, total }))
+    .sort((a, b) => b.total - a.total);
+}
+
+```

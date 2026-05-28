@@ -43,7 +43,9 @@ website:
           - href: simulazioni/scontri.qmd
             text: Moto in direzioni opposte
           - href: simulazioni/Parabole.qmd
-            text: Disequazioni di II grado    
+            text: Disequazioni di II grado   
+          - href: simulazioni/ManchePlicker.qmd
+            text: Plickers a manche       
 
   # LA SIDEBAR DEVE ESSERE ALLINEATA A NAVBAR
   sidebar:

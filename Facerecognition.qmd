@@ -3,7 +3,7 @@ title: "MediaPipe Face Landmarker in Quarto"
 format: html
 ---
 
-Questo esempio utilizza **MediaPipe** per rilevNel viale del parco, Elisa corre in un verso alla velocità costante di 2,78 m/s e Alessio corre nel verso opposto alla velocità costante di 2,22 m/s. Nell'istante in cui Elisa è davanti a un albero con i fiori rosa, Alessio ha appena superato la fontana. Se l'albero e la fontana distano 464 m, dopo quanto tempo i due jogger si incontrano?are i tratti del viso in tempo reale direttamente nel browser.
+Questo esempio utilizza **MediaPipe** per rilevare i punti principali dell'espressione facciale.
 
 ::: {=html}
 <div id="liveView" class="videoView" style="position: relative;">
